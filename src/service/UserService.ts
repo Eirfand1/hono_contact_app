@@ -1,5 +1,5 @@
 import { prismaClient } from "../application/database";
-import { UserResponse, RegisterUserRequest, toUserResponse, LoginUserRequest } from "../model/User";
+import { UserResponse, RegisterUserRequest, toUserResponse, LoginUserRequest, UpdateUserRequest } from "../model/User";
 import { UserValidation } from "../validation/UserValidation";
 import { HTTPException } from "hono/http-exception";
 import { User } from "@prisma/client";
@@ -103,5 +103,43 @@ export class UserService {
       }
 
       return user
+   }
+
+   static async update(user: User, request: UpdateUserRequest): Promise<UserResponse> {
+      request = UserValidation.UPDATE.parse(request)
+
+      if (request.name) {
+         user.name = request.name
+      }
+
+      if (request.password) {
+         user.password = await Bun.password.hash(request.password, {
+            algorithm: "bcrypt",
+            cost: 10
+         })
+      }
+
+      await prismaClient.user.update({
+         where: {
+            username: user.username
+         },
+         data: user
+      })
+
+      return toUserResponse(user)
+
+   }
+
+   static async logout(user: User): Promise<boolean> {
+      await prismaClient.user.update({
+         where: {
+            username: user.username
+         },
+         data: {
+            token: null
+         }
+      })
+
+      return true
    }
 }

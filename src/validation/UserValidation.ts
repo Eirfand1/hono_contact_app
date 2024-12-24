@@ -1,4 +1,4 @@
-import { ZodIntersection, ZodType, z } from "zod";
+import { ZodType, z } from "zod";
 
 export class UserValidation {
    static readonly REGISTER: ZodType = z.object({
@@ -12,5 +12,9 @@ export class UserValidation {
       password: z.string().min(1).max(100),
    })
 
+   static readonly UPDATE: ZodType = z.object({
+      password: z.string().min(1).max(100).optional(),
+      name: z.string().min(1).max(100).optional(),
+   })
    static readonly TOKEN: ZodType = z.string().min(1)
 }

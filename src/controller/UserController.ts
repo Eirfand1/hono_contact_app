@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { LoginUserRequest, RegisterUserRequest, toUserResponse } from "../model/User";
+import { LoginUserRequest, RegisterUserRequest, toUserResponse, UpdateUserRequest } from "../model/User";
 import { UserService } from "../service/UserService";
 import { User } from "@prisma/client";
 import { AppicationVariable } from "../model/App";
@@ -48,3 +48,29 @@ userController.get('/api/users/current', async (c) => {
       data: toUserResponse(user)
    })
 })
+
+userController.patch('/api/users/current', async (c) => {
+   const user = c.get('user') as User
+   const request = await c.req.json() as UpdateUserRequest
+
+   const response = await UserService.update(user, request)
+
+   return c.json({
+      data: response
+   })
+
+})
+
+userController.delete('/api/users/current', async (c) => {
+   const user = c.get('user') as User
+
+   const response = await UserService.logout(user)
+
+   return c.json({
+      data: response
+   })
+
+})
+
+
+

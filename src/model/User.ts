@@ -6,6 +6,11 @@ export type RegisterUserRequest = {
    name: string
 }
 
+export type UpdateUserRequest = {
+   password?: string
+   name?: string
+}
+
 export type UserResponse = {
    username: string
    name: string
