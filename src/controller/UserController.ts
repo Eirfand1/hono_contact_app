@@ -3,6 +3,7 @@ import { LoginUserRequest, RegisterUserRequest, toUserResponse, UpdateUserReques
 import { UserService } from "../service/UserService";
 import { User } from "@prisma/client";
 import { AppicationVariable } from "../model/App";
+import { authMiddleware } from "../middleware/AuthMiddleware";
 
 export const userController = new Hono<{ Variables: AppicationVariable }>();
 
@@ -30,14 +31,7 @@ userController.post('/api/users/login', async (c) => {
 })
 
 
-userController.use(async (c, next) => {
-   const token = c.req.header('Authorization')
-   const user = await UserService.get(token)
-
-   c.set('user', user)
-
-   await next()
-})
+userController.use(authMiddleware)
 
 userController.get('/api/users/current', async (c) => {
    // ambil user 
