@@ -7,7 +7,7 @@ import { contactController } from './controller/ContactController'
 const app = new Hono()
 
 app.get('/', (c) => {
-   return c.text('Hello Hono!')
+  return c.text('Hello Hono!')
 })
 
 app.route('/', userController)
@@ -15,22 +15,22 @@ app.route('/', contactController)
 
 
 app.onError(async (error, c) => {
-   if (error instanceof HTTPException) {
-      c.status(error.status)
-      return c.json({
-         errors: error.message
-      })
-   } else if (error instanceof ZodError) {
-      c.status(400)
-      return c.json({
-         errors: error.message
-      })
-   } else {
-      c.status(500)
-      return c.json({
-         errors: error.message
-      })
+  if (error instanceof HTTPException) {
+    c.status(error.status)
+    return c.json({
+      errors: error.message
+    })
+  } else if (error instanceof ZodError) {
+    c.status(400)
+    return c.json({
+      errors: error.message
+    })
+  } else {
+    c.status(500)
+    return c.json({
+      errors: error.message
+    })
 
-   }
+  }
 })
 export default app
