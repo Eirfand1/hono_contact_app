@@ -44,7 +44,7 @@ export class UserService {
     //validation
     request = UserValidation.LOGIN.parse(request)
 
-    //cek ke db 
+    //cek ke db
     let user = await prismaClient.user.findUnique({
       where: {
         username: request.username

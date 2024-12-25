@@ -4,7 +4,6 @@ import { authMiddleware } from "../middleware/AuthMiddleware";
 import { User } from "@prisma/client";
 import { ContactService } from "../service/ContactService";
 import { CreateContactRequest, SearchContactRequest, UpdateContactRequest } from "../model/Contact";
-import { number } from "zod";
 
 export const contactController = new Hono<{ Variables: AppicationVariable }>();
 contactController.use(authMiddleware)

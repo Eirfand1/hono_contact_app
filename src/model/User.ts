@@ -20,7 +20,6 @@ export type UserResponse = {
 export type LoginUserRequest = {
   username: string
   password: string
-
 }
 
 export function toUserResponse(user: User): UserResponse {
