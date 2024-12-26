@@ -1,9 +1,8 @@
 import { Address, User } from "@prisma/client";
-import { AddressResponse, CreateAddressRequest, GetAddressRequest, RemoveAddressRequest, toAddressResponse, UpdateAddressRequest } from "../model/Address";
+import { AddressResponse, CreateAddressRequest, GetAddressRequest, ListAddressRequest, RemoveAddressRequest, toAddressResponse, UpdateAddressRequest } from "../model/Address";
 import { AddressValidation } from "../validation/AddressValidation";
 import { ContactService } from "./ContactService";
 import { prismaClient } from "../application/database";
-import { add } from "winston";
 import { HTTPException } from "hono/http-exception";
 
 export class AddressService {
@@ -80,5 +79,19 @@ export class AddressService {
 
   }
 
+  static async list(user: User, request: ListAddressRequest): Promise<Array<AddressResponse>> {
+    request = AddressValidation.LIST.parse(request)
+    await ContactService.contactMustExist(user, request.contact_id)
 
+    const addresses = await prismaClient.address.findMany({
+      where: {
+        contact_id: request.contact_id
+      }
+    })
+
+    return addresses.map(address => toAddressResponse(address))
+
+  }
 }
+
+

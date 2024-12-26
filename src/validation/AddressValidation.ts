@@ -29,4 +29,8 @@ export class AddressValidation {
     contact_id: string().uuid(),
     id: string().uuid(),
   })
+
+  static readonly LIST: ZodType = z.object({
+    contact_id: string().uuid(),
+  })
 }

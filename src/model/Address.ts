@@ -34,6 +34,10 @@ export type GetAddressRequest = {
   id: string
 }
 
+export type ListAddressRequest = {
+  contact_id: string
+}
+
 export type UpdateAddressRequest = {
   id: string
   contact_id: string

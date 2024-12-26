@@ -2,9 +2,8 @@ import { Hono } from "hono";
 import { AppicationVariable } from "../model/App";
 import { authMiddleware } from "../middleware/AuthMiddleware";
 import { User } from "@prisma/client";
-import { CreateAddressRequest, GetAddressRequest, RemoveAddressRequest, UpdateAddressRequest } from "../model/Address";
+import { CreateAddressRequest, GetAddressRequest, ListAddressRequest, RemoveAddressRequest, UpdateAddressRequest } from "../model/Address";
 import { AddressService } from "../service/AddressService";
-import { UpdateContactRequest } from "../model/Contact";
 
 export const addressController = new Hono<{ Variables: AppicationVariable }>();
 addressController.use(authMiddleware)
@@ -64,6 +63,16 @@ addressController.delete('/api/contacts/:contact_id/addresses/:address_id', asyn
   })
 })
 
+addressController.get('/api/contacts/:contact_id/addresses', async (c) => {
+  const user = c.get('user') as User
+  const request: ListAddressRequest = {
+    contact_id: c.req.param("contact_id")
+  }
 
+  const response = await AddressService.list(user, request)
+  return c.json({
+    data: response
+  })
+})
 
 
